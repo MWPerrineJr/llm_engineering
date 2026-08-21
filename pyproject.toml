@@ -53,4 +53,7 @@ dependencies = [
     "scraper>=0.1.0",
     "diffusers>=0.39.0",
     "accelerate>=1.14.0",
+    "soundfile>=0.14.0",
+    "sentencepiece>=0.2.0",
+    "huggingface-hub>=0.34.0,<1.0",
 ]
