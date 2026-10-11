@@ -62,33 +62,33 @@ class TokenPredictor:
 
         return predictions
 
-    def create_token_graph(model_name: str, predictions: List[Dict]) -> nx.DiGraph:
-        """ 
-        Create a directed graph showing token predictions 
-        and alternatives.
-        """
-        G = nx.DiGraph()
+def create_token_graph(model_name: str, predictions: List[Dict]) -> nx.DiGraph:
+    """ 
+    Create a directed graph showing token predictions 
+    and alternatives.
+    """
+    G = nx.DiGraph()
 
-        G.add_node("START", 
-                   token=model_name,
-                   prob="START",
-                   color='lightgreen',
-                   size=4000)
-        # First, create all main token nodes in sequence
-        for i, pred in enumerate(predictions):
-            token_id = f"t{i}"
-            G.add_node(
-                token_id,
-                token=pred["token"],
-                prob=f"{pred['probability'] * 100:.1f}%",
-                color="lightblue",
-                size=6000,
-            )
+    G.add_node("START", 
+            token=model_name,
+            prob="START",
+            color='lightgreen',
+            size=4000)
+    # First, create all main token nodes in sequence
+    for i, pred in enumerate(predictions):
+        token_id = f"t{i}"
+        G.add_node(
+            token_id,
+            token=pred["token"],
+            prob=f"{pred['probability'] * 100:.1f}%",
+            color="lightblue",
+            size=6000,
+        )
 
-            if i == 0:
-                G.add_edge('START', token_id)
-            else:
-                G.add_edge(f"t{i - 1}", token_id)
+        if i == 0:
+            G.add_edge('START', token_id)
+        else:
+            G.add_edge(f"t{i - 1}", token_id)
 
         # Then add alternative nodes with a different y-position.
         last_id = None
@@ -119,7 +119,7 @@ class TokenPredictor:
         return G
 
 def visualize_predictions(G: nx.DiGraph,
-                          figsize=(14, 80)):
+                        figsize=(14, 80)):
     """ 
     Visualize the token prediction graph with vertical
     layout and alternating alternatives.
@@ -145,23 +145,23 @@ def visualize_predictions(G: nx.DiGraph,
                 # Place first alternate to left, second to right.
                 x_offset = -spacing_x if alt_num == 0 else spacing_x
                 pos[node] = (x_offset, 
-                             pos[main_token][1] + 0.05)
+                            pos[main_token][1] + 0.05)
 
     # Draw nodes
     node_colors = [G.nodes[node]['color'] for node in G.nodes()]
     node_sizes = [G.nodes[node]['size'] for node in G.nodes()]
     nx.draw_networkx_nodes(G, 
-                           pos,
-                           node_color = node_colors,
-                           node_size = node_sizes)
+                        pos,
+                        node_color = node_colors,
+                        node_size = node_sizes)
     
     # Draw all edges as straight lines
     nx.draw_networkx_edges(G,
-                           pos,
-                           edge_color = 'gray',
-                           arrows = True,
-                           arrowsize = 20,
-                           alpha = 0.7)
+                        pos,
+                        edge_color = 'gray',
+                        arrows = True,
+                        arrowsize = 20,
+                        alpha = 0.7)
 
     # Add labels with token and probability.
     labels = {node: f"{G.nodes[node]['token']}\n{G.nodes[node]['prob']}" for node in G.nodes()}
