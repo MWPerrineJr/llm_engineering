@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 
 load_dotenv(override = True)
 
-
 class TokenPredictor:
     def __init__(self, model_name: str):
         self.client = OpenAI()
